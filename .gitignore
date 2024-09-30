@@ -1,0 +1,37 @@
+# Python
+*.py[cod]
+__pycache__/
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Flask
+instance/
+.webassets-cache
+*.log
+
+# Environment variables
+.env
+
+# VS Code
+.vscode/
+
+# Pytest
+.cache
+*.cover
+nosetests.xml
+coverage.xml
+*.log
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDEs
+.idea/
+*.sublime-project
+*.sublime-workspace

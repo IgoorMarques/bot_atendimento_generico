@@ -1,0 +1,27 @@
+Para iniciar containers:
+    python gerenciar_containers.py start 1
+
+Para parar containers:
+    python gerenciar_containers.py stop 1
+
+Para remover containers:
+    python gerenciar_containers.py remove 1
+
+Inspecionar o Celery:
+    docker exec -it <Nome ou id do container> celery -A app.celery_worker inspect stats
+
+
+celery -A app.celery_worker worker --pool=solo -l info
+
+
+#### Passos para rodar o projeto ####
+
+1 - Atualizar credenciais da api do meta:
+    - Token que expira a cada 24h
+
+2 - Iniciar o rabbitMQ
+
+3 - Iniciar o celery pelo comando: celery -A app.celery_worker worker --pool=solo -l info
+
+4 - redis
+

@@ -1,0 +1,62 @@
+
+version: '3.8'
+services:
+  rabbitmq_1:
+    image: "rabbitmq:management"
+    ports:
+      - "5682:5672"
+      - "15682:15672"
+    volumes:
+      - rabbitmq_data_1:/var/lib/rabbitmq
+    networks:
+      - network_1
+
+  redis_1:
+    image: "redis:latest"
+    ports:
+      - "6389:6379"
+    volumes:
+      - redis_data_1:/data
+    networks:
+      - network_1
+
+  celery_worker_1:
+    build: .
+    depends_on:
+      - rabbitmq_1
+      - redis_1
+    environment:
+      - CELERY_BROKER_URL=pyamqp://guest:guest@rabbitmq_1//
+      - CELERY_RESULT_BACKEND=redis://redis_1:6379/0
+    command: celery -A app.celery_worker worker --loglevel=info --concurrency=10
+    networks:
+      - network_1
+
+  web_1:
+    build: .
+    depends_on:
+      - rabbitmq_1
+      - redis_1
+    ports:
+      - "5010:5000"
+    environment:
+      - CELERY_BROKER_URL=pyamqp://guest:guest@rabbitmq_1//
+      - CELERY_RESULT_BACKEND=redis://redis_1:6379/0
+    networks:
+      - network_1
+
+  flower_1:
+    build: .
+    command: celery --broker=pyamqp://guest:guest@rabbitmq_1// -A app.celery_worker flower
+    ports:
+      - "5565:5555"
+    networks:
+      - network_1
+      
+volumes:
+  rabbitmq_data_1:
+  redis_data_1:
+
+networks:
+  network_1:
+    driver: bridge
